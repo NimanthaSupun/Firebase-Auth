@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "75387351147",
+    "firebase_url": "https://study-planner-b7c06-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "study-planner-b7c06",
+    "storage_bucket": "study-planner-b7c06.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75387351147:android:f82c64892a40defcf4c12e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_auth_test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh4rrh8bSwIkhgdLKA4hsAhKggjzRJhkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:75387351147:android:ea5cfd0bd683eb7ff4c12e",
+        "android_client_info": {
+          "package_name": "com.example.study_planner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh4rrh8bSwIkhgdLKA4hsAhKggjzRJhkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

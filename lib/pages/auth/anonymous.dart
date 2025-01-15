@@ -35,7 +35,7 @@ class AnonymousLoginPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _singInAnonymosly(context),
                   child: Text("Sign in Anonymously"),
-                )
+                ),
               ],
             ),
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_test/pages/auth/register.dart';
+import 'package:flutter_auth_test/pages/main_page.dart';
+import 'package:flutter_auth_test/services/auth_service.dart';
 import 'package:flutter_auth_test/widgets/custom_button.dart';
 import 'package:flutter_auth_test/widgets/custom_input.dart';
 
@@ -15,6 +17,51 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+
+  bool _isLoading = false;
+
+  // singIn user
+  Future<void> _signInUser() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      await AuthService().signInNewUser(
+        email: email,
+        password: password,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(),
+        ),
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text("Error register user: ${error}"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("ok"),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      _isLoading = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +108,13 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  CustomButton(
-                    title: "Login",
-                    onPressed: () {},
-                    width: double.infinity,
-                  ),
+                  _isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : CustomButton(
+                          title: "Login",
+                          onPressed: _signInUser,
+                          width: double.infinity,
+                        ),
                   SizedBox(
                     height: 10,
                   ),

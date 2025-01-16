@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_test/pages/auth/login.dart';
-import 'package:flutter_auth_test/pages/main_page.dart';
 import 'package:flutter_auth_test/services/auth_service.dart';
 import 'package:flutter_auth_test/widgets/custom_button.dart';
 import 'package:flutter_auth_test/widgets/custom_input.dart';
@@ -21,65 +19,144 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
-  // register method
+
+
+  //todo:-register method
+  // Future<void> _registerUser(BuildContext context) async {
+  //   if (!_formKey.currentState!.validate()) {
+  //     return;
+  //   }
+
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   try {
+  //     final email = _emailController.text.trim();
+  //     final password = _passwordController.text.trim();
+  //     final confirmPassword = _confirmPasswordController.text.trim();
+
+  //     if (password != confirmPassword) {
+  //       showDialog(
+  //         context: context,
+  //         builder: (context) => AlertDialog(
+  //           title: Text("Error"),
+  //           content: Text("Do not match password"),
+  //           actions: [
+  //             TextButton(
+  //               onPressed: () => Navigator.of(context).pop(),
+  //               child: Text("ok"),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //       return;
+  //     }
+  //     await AuthService().registerNewUser(email: email, password: password);
+
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => MainPage(),
+  //       ),
+  //     );
+  //   } catch (error) {
+
+  //     showDialog(
+  //       context: context,
+  //       builder: (context) => AlertDialog(
+  //         title: Text("Error"),
+  //         content: Text("Error register user: ${error}"),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () => Navigator.of(context).pop(),
+  //             child: Text("ok"),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   } finally {
+  //     setState(() {
+  //       _isLoading = false;
+  //     });
+  //   }
+  // }
+
 
   Future<void> _registerUser(BuildContext context) async {
+  if (!_formKey.currentState!.validate()) {
+    return;
+  }
 
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  setState(() {
+    _isLoading = true;
+  });
 
-    setState(() {
-      _isLoading = true;
-    });
-    try {
-      final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
-      final confirmPassword = _confirmPasswordController.text.trim();
+  try {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final confirmPassword = _confirmPasswordController.text.trim();
 
-      if (password != confirmPassword) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text("Error"),
-            content: Text("Do not match password"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text("ok"),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-      await AuthService().registerNewUser(email: email, password: password);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainPage(),
-        ),
-      );
-    } catch (error) {
+    if (password != confirmPassword) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: Text("Error"),
-          content: Text("Error register user: ${error}"),
+          content: Text("Passwords do not match"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text("ok"),
+              child: Text("OK"),
             ),
           ],
         ),
       );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      return;
     }
+
+    await AuthService().registerNewUser(email: email, password: password);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Verify Your Email"),
+        content: Text(
+            "A verification email has been sent to $email. Please verify your email before logging in."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginPage(), // Redirect to login page
+      ),
+    );
+  } catch (error) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Error"),
+        content: Text("Error registering user: $error"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  } finally {
+    setState(() {
+      _isLoading = false;
+    });
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

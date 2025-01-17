@@ -49,7 +49,41 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text("Error"),
-          content: Text("Error register user: ${error}"),
+          content: Text("${error}"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("ok"),
+            ),
+          ],
+        ),
+      );
+    } finally {
+      _isLoading = false;
+    }
+  }
+
+  // sign in with google
+  Future<void> _signInGoogle() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await AuthService().signInWithGoogle();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainPage(),
+        ),
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error"),
+          content: Text("${error}"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -108,13 +142,19 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 10,
                   ),
-                  _isLoading
-                      ? Center(child: CircularProgressIndicator())
-                      : CustomButton(
+                  CustomButton(
                           title: "Login",
                           onPressed: _signInUser,
                           width: double.infinity,
                         ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomButton(
+                    title: "Sign In Google",
+                    onPressed: _signInGoogle,
+                    width: double.infinity,
+                  ),
                   SizedBox(
                     height: 10,
                   ),

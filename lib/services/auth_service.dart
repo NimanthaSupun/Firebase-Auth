@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_auth_test/exceptions/auth_exception.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // todo: Signin Anonymous
   Future<void> signInAnonymously() async {
@@ -71,7 +73,6 @@ class AuthService {
 
       final user = userCredential.user;
       if (user != null && !user.emailVerified) {
-        
         await user.sendEmailVerification();
         print("Verification email sent to ${user.email}");
       }
@@ -120,6 +121,32 @@ class AuthService {
     } catch (error) {
       print("Error logging in: $error");
       throw Exception("An error occurred during login.");
+    }
+  }
+
+  // todo:Sign in with google
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        return;
+      }
+      // get details
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // create new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      await _auth.signInWithCredential(credential);
+    }  on FirebaseAuthException catch (error) {
+      print("Error sign in google: ${mapFirebaseAuthExceptionCode(error.code)}");
+      throw Exception(mapFirebaseAuthExceptionCode(error.code));
+    }
+    catch (error) {
+      print("Error sign in google: ${error}");
     }
   }
 }
